@@ -63,14 +63,13 @@ export function PaymentForm() {
                 handleGenerateCode()
                 setFormData({})
             }
-            handleGenerateCode()
         }
     }
 
     const emailTemplateParams = {
         fullName: formData.fullName,
         code,
-        to_email: `michaelfrancis135@gmail.com`,
+        to_email: `dkarafitness@gmail.com, ${formData.email}`,
         customerCount
     }
 
