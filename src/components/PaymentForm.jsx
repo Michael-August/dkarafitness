@@ -63,6 +63,7 @@ export function PaymentForm() {
                 handleGenerateCode()
                 setFormData({})
             }
+            handleGenerateCode()
         }
     }
 
