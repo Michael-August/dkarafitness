@@ -1,5 +1,5 @@
 import { InterswitchPay } from "react-interswitch";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { generateCode } from "../utils/codeGenerator";
 
@@ -16,24 +16,12 @@ export function PaymentForm() {
 
     const [code, setCode] = useState('');
     const [customerCount, setCustomerCount] = useState(0)
-    const [generatedCodes, setGeneratedCodes] = useState(new Set());
-
-    const emailTemplateParams = {
-        fullName: formData.fullName,
-        code,
-        to_email: `${formData.email},  dkarafitness@gmail.com`,
-        customerCount
-    }
 
     const handleGenerateCode = () => {
         let newCode;
-        do {
-            newCode = generateCode();
-        } while (generatedCodes.has(newCode));
-
-        setGeneratedCodes(new Set(generatedCodes).add(newCode));
-        setCode((prevCode) => prevCode = newCode);
-        setCustomerCount((prev) => prev+=1)
+        newCode = generateCode();
+        setCode((prevCode) => newCode);
+        setCustomerCount((prev) => prev + 1)
     };
 
     const sendEmail = () => {
@@ -73,10 +61,17 @@ export function PaymentForm() {
             console.log("response: ", response);
             if (response.resp === '00' || response.desc === 'Approved by Financial Institution') {
                 handleGenerateCode()
-                sendEmail()
                 setFormData({})
             }
+            handleGenerateCode()
         }
+    }
+
+    const emailTemplateParams = {
+        fullName: formData.fullName,
+        code,
+        to_email: `michaelfrancis135@gmail.com`,
+        customerCount
     }
 
     const handleChange = (e) => {
@@ -86,6 +81,10 @@ export function PaymentForm() {
             [name]: value,
         }));
     };
+
+    useEffect(() => {
+        if(code !== '' && customerCount !== 0) sendEmail()
+    }, [code, customerCount])
 
     return (
         <>
@@ -100,6 +99,7 @@ export function PaymentForm() {
                             placeholder="Adeife Jessica" type="text"
                             id="name"
                             name="fullName"
+                            autoComplete="off"
                             value={formData.fullName}
                             onChange={handleChange}
                             required
@@ -113,6 +113,7 @@ export function PaymentForm() {
                             placeholder="adeifejessica@gmail.com" type="email"
                             id="email"
                             name="email"
+                            autoComplete="off"
                             value={formData.email}
                             onChange={handleChange}
                             required
