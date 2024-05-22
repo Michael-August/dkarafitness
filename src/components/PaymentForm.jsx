@@ -33,6 +33,7 @@ export function PaymentForm() {
                     icon: 'success',
                     confirmButtonText: 'OK'
                 });
+                setFormData({})
             })
             .catch(error => {
             })
@@ -61,7 +62,6 @@ export function PaymentForm() {
             console.log("response: ", response);
             if (response.resp === '00' || response.desc === 'Approved by Financial Institution') {
                 handleGenerateCode()
-                setFormData({})
             }
         }
     }
@@ -82,7 +82,9 @@ export function PaymentForm() {
     };
 
     useEffect(() => {
-        if(code !== '' && customerCount !== 0) sendEmail()
+        if (code !== '' && customerCount !== 0) {
+            sendEmail()
+        }
     }, [code, customerCount])
 
     return (
